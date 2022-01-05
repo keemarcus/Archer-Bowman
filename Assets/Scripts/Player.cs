@@ -44,7 +44,7 @@ public class Player : Character
                 }
             break;
 
-            case PlayerState.EndGame:
+            case PlayerState.Paused:
                 animator.SetBool("Walking", false);
                 animator.SetFloat("Y", -1);
                 animator.SetFloat("X", 0);
@@ -103,7 +103,7 @@ public class Player : Character
     public enum PlayerState
     {
         Default,
-        EndGame,
+        Paused,
         Aiming
     }
 }

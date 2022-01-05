@@ -34,7 +34,7 @@ public class PlayerControl : Player
                 }
             break;
 
-            case PlayerState.EndGame:
+            case PlayerState.Paused:
                 // stop player movement
                 moveDirection = Vector2.zero;
             break;

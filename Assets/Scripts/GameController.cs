@@ -17,6 +17,8 @@ public class GameController : MonoBehaviour
     int lastTimeSpawned;
     public GameObject inGameUI;
     public GameObject endGameUI;
+    public GameObject pauseMenuUI;
+    bool paused = false;
     bool inEndGame = false;
     
     // Start is called before the first frame update
@@ -25,7 +27,9 @@ public class GameController : MonoBehaviour
         // make sure that the in game ui is active
         endGameUI.SetActive(false);
         inGameUI.SetActive(true);
+        pauseMenuUI.SetActive(false);
         inEndGame = false;
+        paused = false;
 
         // set bounds for spawning targets
         topLeftBound = new Vector2(-25,10);
@@ -51,21 +55,31 @@ public class GameController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // update the timer
-        string [] timerElements = timer.text.Split(':');
-        int newTime = (int)timeRemaining;
-        if (timeRemaining > 0)
-        {
-            timeRemaining -= Time.deltaTime;
-            if(newTime != lastTimeSpawned && newTime % 5 == 0){
-                SpawnTarget(newTime);
+        if(!paused){
+            if(Input.GetKeyDown(KeyCode.Escape)){
+                Pause();
+            }
+            
+            // update the timer
+            string [] timerElements = timer.text.Split(':');
+            int newTime = (int)timeRemaining;
+            if (timeRemaining > 0)
+            {
+                timeRemaining -= Time.deltaTime;
+                if(newTime != lastTimeSpawned && newTime % 5 == 0){
+                    SpawnTarget(newTime);
+                }
+            }
+            else
+            {
+                if(!inEndGame){EndGame();}
+            }
+            timeSlider.value = timeRemaining;
+        } else{
+            if(Input.GetKeyDown(KeyCode.Escape)){
+                Resume();
             }
         }
-        else
-        {
-            if(!inEndGame){EndGame();}
-        }
-        timeSlider.value = timeRemaining;
     }
 
     void SpawnTarget(int timeSpawned){
@@ -91,7 +105,7 @@ public class GameController : MonoBehaviour
     }
     void EndGame(){
         // disable player movement
-        player.currentState = Player.PlayerState.EndGame;
+        player.currentState = Player.PlayerState.Paused;
 
         // stop the music
         AudioSource musicPlayer = FindObjectOfType<Camera>().GetComponentInChildren<AudioSource>();
@@ -114,6 +128,26 @@ public class GameController : MonoBehaviour
         endGameUI.GetComponentInChildren<Text>().text = endGameText;
 
         inEndGame = true;
+    }
+    void Pause(){
+        // pause the timer
+        paused = true;
+
+        // disable player controls
+        player.currentState = Player.PlayerState.Paused;
+
+        // enable the pause ui elements
+        pauseMenuUI.SetActive(true);
+    }
+    public void Resume(){
+        // disable the pause ui elements
+        pauseMenuUI.SetActive(false);
+        
+        // reenable player controls
+        player.currentState = Player.PlayerState.Default;
+
+        // resume the timer
+        paused = false;
     }
     public void Retry(){
         SceneManager.LoadScene("Main");
