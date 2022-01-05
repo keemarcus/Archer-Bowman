@@ -20,6 +20,9 @@ public class GameController : MonoBehaviour
     public GameObject pauseMenuUI;
     bool paused = false;
     bool inEndGame = false;
+    public AudioSource musicSource;
+    public Slider musicVolume;
+    public Slider sfxVolume;
     
     // Start is called before the first frame update
     void Start()
@@ -30,6 +33,7 @@ public class GameController : MonoBehaviour
         pauseMenuUI.SetActive(false);
         inEndGame = false;
         paused = false;
+        SetVolumes();
 
         // set bounds for spawning targets
         topLeftBound = new Vector2(-25,10);
@@ -162,6 +166,31 @@ public class GameController : MonoBehaviour
 
     int GetHighScore(){
         return PlayerPrefs.GetInt("highScore");
+    }
+
+    public void UpdateMusicVolume(){
+        PlayerPrefs.SetInt("musicVol", (int)musicVolume.value);
+        PlayerPrefs.Save();
+        SetVolumes();
+    }
+    public void UpdateSFXVolume(){
+        PlayerPrefs.SetInt("sfxVol", (int)sfxVolume.value);
+        PlayerPrefs.Save();
+        SetVolumes();
+    }
+    void SetVolumes(){
+        // update the music volume
+        musicSource.volume = PlayerPrefs.GetInt("musicVol") * .1f;
+
+        // update the sfx volume for any existing arrows
+        Arrow [] arrows = FindObjectsOfType<Arrow>();
+        foreach(Arrow x in arrows){
+            x.volumeLevel = PlayerPrefs.GetInt("sfxVol");
+        }
+
+        // update the volume sliders
+        musicVolume.value = PlayerPrefs.GetInt("musicVol");
+        sfxVolume.value = PlayerPrefs.GetInt("sfxVol");
     }
 
 }
