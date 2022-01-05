@@ -14,17 +14,13 @@ public class Arrow : MonoBehaviour
     public float timeSinceInitialization;
     public int damage = 1;
     Player player;
-    void Start()
-    {
-        // initializationTime = Time.timeSinceLevelLoad;
-        // // set sprite sorting order
-        // spriteRenderer.sortingOrder = 1;
-        // // find the player
-        // player = FindObjectOfType<Player>();
-    }
+    public int volumeLevel;
     private void Awake() {
+        // get the sfx volume
+        volumeLevel = PlayerPrefs.GetInt("sfxVol");
+        
         // play the fired sound effect
-        AudioSource.PlayClipAtPoint(bowFired, transform.position);
+        AudioSource.PlayClipAtPoint(bowFired, transform.position, volumeLevel * .05f);
 
         // start the timer for despawning
         initializationTime = Time.timeSinceLevelLoad;
@@ -63,11 +59,11 @@ public class Arrow : MonoBehaviour
             Destroy(this.gameObject, 0.05f);
 
             // play the target hit sound effect
-            AudioSource.PlayClipAtPoint(targetHit, transform.position);
+            AudioSource.PlayClipAtPoint(targetHit, transform.position, volumeLevel * .1f);
         }
         else{
             // play the wall hit sound effect
-            AudioSource.PlayClipAtPoint(wallHit, transform.position);
+            AudioSource.PlayClipAtPoint(wallHit, transform.position, volumeLevel * .1f);
         }
     }
 }

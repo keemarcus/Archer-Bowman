@@ -13,11 +13,15 @@ public class MainMenuController : MonoBehaviour
     public GameObject optionsMenu;
     public GameObject info;
     public GameObject confirmMenu;
+    public AudioSource musicSource;
+    public Slider musicVolume;
+    public Slider sfxVolume;
     
     // Start is called before the first frame update
     void Start()
     {
         SetUpMainMenu();
+        SetVolumes();
     }
     public void playGame() {
         SceneManager.LoadScene("Main");
@@ -82,6 +86,7 @@ public class MainMenuController : MonoBehaviour
         confirmMenu.SetActive(false);
         info.SetActive(false);
         mainMenuCanvas.SetActive(true);
+
         // get the score counter
         Text[] textObjects = FindObjectsOfType<Text>();
         foreach(Text x in textObjects){
@@ -99,5 +104,23 @@ public class MainMenuController : MonoBehaviour
         confirmMenu.SetActive(false);
         mainMenuCanvas.SetActive(false);
         info.SetActive(true);
+    }
+    public void UpdateMusicVolume(){
+        PlayerPrefs.SetInt("musicVol", (int)musicVolume.value);
+        PlayerPrefs.Save();
+        SetVolumes();
+    }
+    public void UpdateSFXVolume(){
+        PlayerPrefs.SetInt("sfxVol", (int)sfxVolume.value);
+        PlayerPrefs.Save();
+        SetVolumes();
+    }
+    void SetVolumes(){
+        // update the music volume
+        musicSource.volume = PlayerPrefs.GetInt("musicVol") * .05f;
+
+        // update the volume sliders
+        musicVolume.value = PlayerPrefs.GetInt("musicVol");
+        sfxVolume.value = PlayerPrefs.GetInt("sfxVol");
     }
 }
