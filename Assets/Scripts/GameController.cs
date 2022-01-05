@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 public class GameController : MonoBehaviour
 {
     public float timeRemaining = 30;
+    int timePassed;
     public GameObject target;
     public Player player;
     Text timer;
@@ -23,6 +24,7 @@ public class GameController : MonoBehaviour
     public AudioSource musicSource;
     public Slider musicVolume;
     public Slider sfxVolume;
+    int spawnModifier;
     
     // Start is called before the first frame update
     void Start()
@@ -34,6 +36,10 @@ public class GameController : MonoBehaviour
         inEndGame = false;
         paused = false;
         SetVolumes();
+
+        // set initial spawn modifier
+        spawnModifier = 3;
+        timePassed = 0;
 
         // set bounds for spawning targets
         topLeftBound = new Vector2(-25,10);
@@ -50,7 +56,7 @@ public class GameController : MonoBehaviour
         timeSlider = FindObjectOfType<Slider>();
 
         // spawn the first target
-        SpawnTarget((int)timeRemaining);
+        SpawnTarget(0);
 
         // make sure the player is in the right state
         player.currentState = Player.PlayerState.Default;
@@ -66,12 +72,14 @@ public class GameController : MonoBehaviour
             
             // update the timer
             string [] timerElements = timer.text.Split(':');
-            int newTime = (int)timeRemaining;
+        
             if (timeRemaining > 0)
             {
                 timeRemaining -= Time.deltaTime;
-                if(newTime != lastTimeSpawned && newTime % 5 == 0){
-                    SpawnTarget(newTime);
+                timePassed = (int)(Time.timeSinceLevelLoad);
+
+                if(timePassed > lastTimeSpawned && timePassed % 5 == 0){
+                    SpawnTarget(timePassed);
                 }
             }
             else
@@ -89,6 +97,7 @@ public class GameController : MonoBehaviour
     void SpawnTarget(int timeSpawned){
         lastTimeSpawned = timeSpawned;
         SpawnTarget();
+        UpdateSpawnRate();
     }
     public void SpawnTarget(){
         // generate random spawn point for new target
@@ -101,11 +110,17 @@ public class GameController : MonoBehaviour
         int rand1 = Random.Range(1,7);
         int rand2 = Random.Range(1,7);
         int randTotal = rand1 + rand2;
-        if(randTotal < 5){
+        if(randTotal <= 2 + spawnModifier){
             newTarget.GetComponent<Target>().UpdateType(1);
-        } else if(randTotal > 10){
+        } else if(randTotal >= 12 - spawnModifier){
             newTarget.GetComponent<Target>().UpdateType(2);
         }
+    }
+
+    void UpdateSpawnRate(){
+        if(timePassed % 20 == 0 && spawnModifier > 0){
+            spawnModifier -= 1;
+        } 
     }
     void EndGame(){
         // disable player movement
@@ -136,6 +151,7 @@ public class GameController : MonoBehaviour
     void Pause(){
         // pause the timer
         paused = true;
+        Time.timeScale = 0;
 
         // disable player controls
         player.currentState = Player.PlayerState.Paused;
@@ -152,6 +168,7 @@ public class GameController : MonoBehaviour
 
         // resume the timer
         paused = false;
+        Time.timeScale = 1;
     }
     public void Retry(){
         SceneManager.LoadScene("Main");
