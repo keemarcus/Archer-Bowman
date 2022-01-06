@@ -123,7 +123,7 @@ public class MainMenuController : MonoBehaviour
     }
     void SetVolumes(){
         // update the music volume
-        musicSource.volume = PlayerPrefs.GetInt("musicVol") * .05f;
+        musicSource.volume = PlayerPrefs.GetInt("musicVol") * .025f;
 
         // update the volume sliders
         musicVolume.value = PlayerPrefs.GetInt("musicVol");

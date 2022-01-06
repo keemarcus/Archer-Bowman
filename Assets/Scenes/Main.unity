@@ -1767,6 +1767,8 @@ MonoBehaviour:
   endGameUI: {fileID: 1437258162}
   pauseMenuUI: {fileID: 1324452194}
   musicSource: {fileID: 733675600}
+  gameOver: {fileID: 8300000, guid: 3a0789bed28639149a94da7d499e6606, type: 3}
+  highScore: {fileID: 8300000, guid: 24353dbe559990d418b1aed10cbb1924, type: 3}
   musicVolume: {fileID: 1465723037}
   sfxVolume: {fileID: 809187399}
   inputMode: {fileID: 50158841}

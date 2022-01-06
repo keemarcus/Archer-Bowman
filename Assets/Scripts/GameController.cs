@@ -22,6 +22,8 @@ public class GameController : MonoBehaviour
     bool paused = false;
     bool inEndGame = false;
     public AudioSource musicSource;
+    public AudioClip gameOver;
+    public AudioClip highScore;
     public Slider musicVolume;
     public Slider sfxVolume;
     public Slider inputMode;
@@ -141,11 +143,22 @@ public class GameController : MonoBehaviour
         string endGameText;
         // compare to current high score
         if(score >  GetHighScore()){
-            // update the high score to the new value
+            // display the score
             endGameText = "New High Score! - " + score;
+
+            // update the high score to the new value
             SaveHighScore(score);
+
+            // play the highscore sound effect
+            AudioSource.PlayClipAtPoint(highScore, musicSource.transform.position, PlayerPrefs.GetInt("sfxVol") * .1f);
         }
-        else{endGameText = "Score - " + score;}
+        else{
+            // display the score
+            endGameText = "Score - " + score;
+
+            // play the game over sound effect
+            AudioSource.PlayClipAtPoint(gameOver, musicSource.transform.position, PlayerPrefs.GetInt("sfxVol") * .1f);
+        }
         // switch to the endgame ui
         inGameUI.SetActive(false);
         endGameUI.SetActive(true);
@@ -207,7 +220,7 @@ public class GameController : MonoBehaviour
     }
     void SetVolumes(){
         // update the music volume
-        musicSource.volume = PlayerPrefs.GetInt("musicVol") * .1f;
+        musicSource.volume = PlayerPrefs.GetInt("musicVol") * .05f;
 
         // update the sfx volume for any existing arrows
         Arrow [] arrows = FindObjectsOfType<Arrow>();
