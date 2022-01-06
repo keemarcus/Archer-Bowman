@@ -20,7 +20,7 @@ public class Arrow : MonoBehaviour
         volumeLevel = PlayerPrefs.GetInt("sfxVol");
         
         // play the fired sound effect
-        AudioSource.PlayClipAtPoint(bowFired, transform.position, volumeLevel * .05f);
+        AudioSource.PlayClipAtPoint(bowFired, transform.position, volumeLevel * .1f);
 
         // start the timer for despawning
         initializationTime = Time.timeSinceLevelLoad;
