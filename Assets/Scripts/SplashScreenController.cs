@@ -14,6 +14,20 @@ public class SplashScreenController : Player
     // Start is called before the first frame update
     void Start()
     {
+        // set up the default values for playerprefs if they don't exist
+        if(!PlayerPrefs.HasKey("highScore")){
+            PlayerPrefs.SetInt("highScore", 0);
+        }
+        if(!PlayerPrefs.HasKey("musicVol")){
+            PlayerPrefs.SetInt("musicVol", 10);
+        }
+        if(!PlayerPrefs.HasKey("sfxVol")){
+            PlayerPrefs.SetInt("sfxVol", 10);
+        }
+        if(!PlayerPrefs.HasKey("inputMode")){
+            PlayerPrefs.SetInt("inputMode", 0);
+        }
+        
         this.GetComponent<SpriteRenderer>().sortingOrder = 2;
         aimDirection = Vector3.zero - body.transform.position;
         aimDirection.Normalize();
