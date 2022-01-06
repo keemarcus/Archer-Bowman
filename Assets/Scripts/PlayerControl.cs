@@ -40,7 +40,10 @@ public class PlayerControl : Player
     {
         if(controllerMode){
             moveDirection = new Vector2(Input.GetAxis("Horizontal_LS"), moveDirection.y = Input.GetAxis("Vertical_LS"));
-            aimDirection = new Vector2(Input.GetAxis("Horizontal_RS"), Input.GetAxis("Vertical_RS"));
+            if(!(Input.GetAxis("Horizontal_RS") == 0 && Input.GetAxis("Vertical_RS") == 0)){
+                aimDirection = new Vector2(Input.GetAxis("Horizontal_RS"), Input.GetAxis("Vertical_RS"));
+            }
+            
 
             // check for attack attack
             if (Input.GetAxisRaw("RT") > 0)
@@ -71,7 +74,7 @@ public class PlayerControl : Player
 
     void GetInputAiming(bool controllerMode)
     {
-        if(controllerMode){
+        if(controllerMode && !(Input.GetAxis("Horizontal_RS") == 0 && Input.GetAxis("Vertical_RS") == 0)){
             aimDirection = new Vector2(Input.GetAxis("Horizontal_RS"), Input.GetAxis("Vertical_RS"));
         }else{
             aimDirection = Camera.main.ScreenToWorldPoint(Input.mousePosition) - body.transform.position;
