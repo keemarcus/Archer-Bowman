@@ -15,8 +15,8 @@ public class SplashScreenController : Player
     void Start()
     {
         this.GetComponent<SpriteRenderer>().sortingOrder = 2;
-        mousePosition = Vector3.zero - body.transform.position;
-        mousePosition.Normalize();
+        aimDirection = Vector3.zero - body.transform.position;
+        aimDirection.Normalize();
 
         // start the timer
         initializationTime = Time.timeSinceLevelLoad;
@@ -41,7 +41,7 @@ public class SplashScreenController : Player
             GameObject newTarget = Instantiate(target, new Vector3(5,0,0), Quaternion.identity);
             newTarget.GetComponentInChildren<Target>().UpdateType(3);
             currentState = PlayerState.Aiming;
-            moveDirection = mousePosition;
+            moveDirection = aimDirection;
             spawned = true;
         }
         

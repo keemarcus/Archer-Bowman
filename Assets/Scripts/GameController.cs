@@ -24,6 +24,7 @@ public class GameController : MonoBehaviour
     public AudioSource musicSource;
     public Slider musicVolume;
     public Slider sfxVolume;
+    public Slider inputMode;
     int spawnModifier;
     
     // Start is called before the first frame update
@@ -35,7 +36,11 @@ public class GameController : MonoBehaviour
         pauseMenuUI.SetActive(false);
         inEndGame = false;
         paused = false;
+
+        // get settings from player prefs
         SetVolumes();
+        SetControllerMode();
+        
 
         // set initial spawn modifier
         spawnModifier = 3;
@@ -66,7 +71,7 @@ public class GameController : MonoBehaviour
     void Update()
     {
         if(!paused){
-            if(Input.GetKeyDown(KeyCode.Escape)){
+            if(Input.GetButtonDown("Pause")){
                 Pause();
             }
             
@@ -88,7 +93,7 @@ public class GameController : MonoBehaviour
             }
             timeSlider.value = timeRemaining;
         } else{
-            if(Input.GetKeyDown(KeyCode.Escape)){
+            if(Input.GetButtonDown("Pause")){
                 Resume();
             }
         }
@@ -195,6 +200,11 @@ public class GameController : MonoBehaviour
         PlayerPrefs.Save();
         SetVolumes();
     }
+    public void UpdateInputMode(){
+        PlayerPrefs.SetInt("inputMode", (int)inputMode.value);
+        PlayerPrefs.Save();
+        SetControllerMode();
+    }
     void SetVolumes(){
         // update the music volume
         musicSource.volume = PlayerPrefs.GetInt("musicVol") * .1f;
@@ -208,6 +218,19 @@ public class GameController : MonoBehaviour
         // update the volume sliders
         musicVolume.value = PlayerPrefs.GetInt("musicVol");
         sfxVolume.value = PlayerPrefs.GetInt("sfxVol");
+    }
+
+    void SetControllerMode(){
+        // update the controllermode on player
+        if( PlayerPrefs.GetInt("inputMode") == 1){
+            player.controllerMode = true;
+        }
+        else{
+            player.controllerMode = false;
+        }
+
+        // update the slider
+        inputMode.value = PlayerPrefs.GetInt("inputMode");
     }
 
 }
