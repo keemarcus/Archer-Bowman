@@ -5,24 +5,34 @@ using UnityEngine;
 public class Player : Character
 {
     public PlayerState currentState;
-    public Vector2 mousePosition;
+    public Vector2 aimDirection;
     public bool waiting = false;
     
     public GameObject arrow;
     public GameObject crosshairRef;
+    public bool controllerMode;
     protected GameObject crosshair;
     public float projectileSpeed = 2000;
-    public void Aim()
+    public void Aim(bool controllerMode)
     {
         // disable movement
         tempSpeed = 0f;
-
-        if(Input.GetMouseButton(0) == false && !waiting)
-        {
-            // fire
-            Attack(moveDirection);
-            currentState = PlayerState.Default;
-            tempSpeed = speed;
+        if(controllerMode){
+            if(Input.GetAxisRaw("RT") == 0 && !waiting)
+            {
+                // fire
+                Attack(aimDirection);
+                currentState = PlayerState.Default;
+                tempSpeed = speed;
+            }
+        } else{
+            if(Input.GetMouseButton(0) == false && !waiting)
+            {
+                // fire
+                Attack(aimDirection);
+                currentState = PlayerState.Default;
+                tempSpeed = speed;
+            }
         }
     }
 
@@ -52,8 +62,8 @@ public class Player : Character
 
             case PlayerState.Aiming:
                 animator.SetBool("Aiming", true);
-                animator.SetFloat("X", moveDirection.x);
-                animator.SetFloat("Y", moveDirection.y);
+                animator.SetFloat("X", aimDirection.x);
+                animator.SetFloat("Y", aimDirection.y);
             break;
         }
     }
@@ -66,8 +76,6 @@ public class Player : Character
         Physics2D.IgnoreCollision(newArrow.GetComponent<Collider2D>(), GetComponent<Collider2D>());
 
         newArrow.GetComponent<Rigidbody2D>().AddForce(aimDirection * projectileSpeed);
-       
-        // coolDown = Time.time + attackSpeed;
 
         GameObject [] arrows = GameObject.FindGameObjectsWithTag("Arrow");
         if(arrows.Length > 5){

@@ -16,6 +16,7 @@ public class MainMenuController : MonoBehaviour
     public AudioSource musicSource;
     public Slider musicVolume;
     public Slider sfxVolume;
+    public Slider inputMode;
     
     // Start is called before the first frame update
     void Start()
@@ -115,6 +116,11 @@ public class MainMenuController : MonoBehaviour
         PlayerPrefs.Save();
         SetVolumes();
     }
+    public void UpdateInputMode(){
+        PlayerPrefs.SetInt("inputMode", (int)inputMode.value);
+        PlayerPrefs.Save();
+        SetControllerMode();
+    }
     void SetVolumes(){
         // update the music volume
         musicSource.volume = PlayerPrefs.GetInt("musicVol") * .05f;
@@ -122,5 +128,9 @@ public class MainMenuController : MonoBehaviour
         // update the volume sliders
         musicVolume.value = PlayerPrefs.GetInt("musicVol");
         sfxVolume.value = PlayerPrefs.GetInt("sfxVol");
+    }
+    void SetControllerMode(){
+        // update the input mode slider
+        inputMode.value = PlayerPrefs.GetInt("inputMode");
     }
 }
