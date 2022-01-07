@@ -27,6 +27,7 @@ public class SplashScreenController : Player
         if(!PlayerPrefs.HasKey("inputMode")){
             PlayerPrefs.SetInt("inputMode", 0);
         }
+        PlayerPrefs.Save();
         
         this.GetComponent<SpriteRenderer>().sortingOrder = 2;
         aimDirection = Vector3.zero - body.transform.position;

@@ -67,6 +67,9 @@ public class GameController : MonoBehaviour
 
         // make sure the player is in the right state
         player.currentState = Player.PlayerState.Default;
+
+        // make sure game isn't paused
+        Resume();
     }
 
     // Update is called once per frame
